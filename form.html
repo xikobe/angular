@@ -1,21 +1,18 @@
 <!DOCTYPE html >
-<html lang="en"
-      ng-app="minmax">
-<head >
-	<title >Controllers</title >
-	<link href="libs/bootstrap/dist/css/bootstrap.min.css"
-	      rel="stylesheet" >
-	<link href="css/form.css"
-	      rel="stylesheet" >
-</head >
+<html lang="en" ng-app="minmax">
 
-<body >
+<head>
+    <title>Controllers</title>
+    <link href="libs/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="css/form.css" rel="stylesheet">
+</head>
 
-<nav class="navbar navbar-inverse navbar-fixed-top" >
-	<div class="container" >
-		<div class="navbar-header" >
-			<a class="navbar-brand"
-			   href="/" >Controllers
+<body>
+
+    <nav class="navbar navbar-inverse navbar-fixed-top">
+        <div class="container">
+            <div class="navbar-header">
+                <a class="navbar-brand" href="/">Controllers
 			</a >
 		</div >
 		,
@@ -30,7 +27,8 @@
 			<input type="text"
 			       class="form-control"
 			       ng-model="formData.name"
-			       id="name" >
+			       id="name"
+			       required="required">
 		</div >
 
 		<div class="form-group" ng-class="{
@@ -57,12 +55,13 @@
 			       class="form-control"
 			       ng-model="formData.age"
 			       id="age"
-             name="age">
+                name="age"
+                required="required">
 		</div >
 
     <div class="form-group" >
 			<label for="sex" >Sex</label >
-			<select class="form-control" name="sex" id="sex" ng-model="formData.sex">
+			<select class="form-control" name="sex" id="sex" ng-model="formData.sex" required="required">
         <option value="">Please choose</option>
         <option value="male">Male</option>
         <option value="female">Female</option>
@@ -74,7 +73,7 @@
 			<input type="password"
 			       class="form-control"
 			       ng-model="formData.password"
-			       id="password" >
+			       id="password" required="required">
 		</div >
 
 		<div class="form-group" >
@@ -83,12 +82,13 @@
 		</div >
 
 	</form >
-
+    
   <pre>{{theForm | json}}</pre>
 </div >
 
-<script src="libs/angular/angular.min.js" ></script >
-<script src="js/form.js" ></script >
+    <script src="libs/angular/angular.min.js" ></script>
+    <script src="bower_components/angular-auto-validate/dist/jcs-auto-validate.min.js"></script>
+    <script src="js/form.js" ></script>
 
 
 </body >
