@@ -24,7 +24,7 @@
 
 <div class="container main-content" ng-controller="minMaxCtrl">
 
-	<form >
+	<form ng-submit="onSubmit(theForm.$valid)" novalidate="novalidate" name="theForm">
 		<div class="form-group" >
 			<label for="name" >Name</label >
 			<input type="text"
@@ -33,12 +33,22 @@
 			       id="name" >
 		</div >
 
-		<div class="form-group" >
+		<div class="form-group" ng-class="{
+      'has-error' : !theForm.email.$valid && (!theForm.$pristine || theForm.$submitted),
+      'has-success' : theForm.email.$valid && (!theForm.$pristine || theForm.$submitted)
+    }">
 			<label for="email" >Email</label >
 			<input type="email"
 			       class="form-control"
 			       ng-model="formData.email"
-			       id="email" >
+			       id="email"
+             name="email"
+             required="required">
+             <!--<pre>Pristine? {{theForm.$pristine}}</pre>
+             <pre>Valid field? {{theForm.email.$valid }}</pre>
+             <pre>Validation? {{theForm.email.$error | json}}</pre>-->
+             <p class="help-block" ng-show="theForm.email.$error.required && (!theForm.$pristine || theForm.$submitted)">O email não está preenchido</p>
+             <p class="help-block" ng-show="theForm.email.$error.email && (!theForm.$pristine || theForm.$submitted)">O email não é valido</p>
 		</div >
 
     <div class="form-group" >
@@ -46,7 +56,8 @@
 			<input type="number"
 			       class="form-control"
 			       ng-model="formData.age"
-			       id="email" >
+			       id="age"
+             name="age">
 		</div >
 
     <div class="form-group" >
@@ -67,15 +78,13 @@
 		</div >
 
 		<div class="form-group" >
-			<button class="btn btn-primary" ng-click="onSubmit()">Register
+			<button class="btn btn-primary" type="submit">Register
 			</button >
 		</div >
 
 	</form >
 
-  <pre>
-    {{formData | json}}
-  </pre>
+  <pre>{{theForm | json}}</pre>
 </div >
 
 <script src="libs/angular/angular.min.js" ></script >
