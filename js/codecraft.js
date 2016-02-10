@@ -905,4 +905,8 @@ app.controller('PersonsController', function($scope){
   		}
   	]
 
+  $scope.selectedIndex = null;
+  $scope.selectPerson = function(index){
+    $scope.selectedIndex = index;
+  }
 })
