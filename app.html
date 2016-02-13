@@ -18,24 +18,51 @@
 </nav >
 
 <div class="container main-content" ng-controller="PersonsController">
-  <table class="table table-bordered">
-    <tr>
-      <th></th>
-      <th>Nome</th>
-      <th>Email</th>
-      <th>Birthday</th>
-    </tr>
-    <tr ng-repeat="person in persons"
-        ng-click="selectPerson($index)"
-        ng-style="{
-          'background-color': $index == selectedIndex ? 'lightgray' : '',
-        }">
-      <td>{{$index + 1}}</td>
-      <td>{{person.name}}</td>
-      <td>{{person.email}}</td>
-      <td>{{person.birthdate | date:"longDate"}}</td>
-    </tr>
-  </table>
+	<div class="row">
+		<div class="col-md-8">
+			<table class="table table-bordered">
+		    <tr>
+		      <th></th>
+		      <th>Nome</th>
+		      <th>Email</th>
+		      <th>Birthday</th>
+		    </tr>
+		    <tr ng-repeat="person in persons"
+		        ng-click="selectPerson(person, $index)"
+		        ng-style="{
+		          'background-color': $index == selectedIndex ? 'lightgray' : '',
+		        }">
+		      <td>{{$index + 1}}</td>
+		      <td>{{person.name}}</td>
+		      <td>{{person.email}}</td>
+		      <td>{{person.birthdate | date:"longDate"}}</td>
+		    </tr>
+		  </table>
+		</div>
+		<div class="col-md-4">
+			<div class="panel panel-default">
+				<div class="panel-heading">Details</div>
+				<div class="panel-body">
+					<dl>
+						<dt>Name</dt>
+						<dd>{{selectedPerson.name}}</dd>
+						<dt>Email</dt>
+						<dd>{{selectedPerson.email}}</dd>
+						<dt>Brithday</dt>
+						<dd>{{selectedPerson.birthdate | date:"longDate"}}</dd>
+						<dt>Phonenumber</dt>
+						<dd>{{selectedPerson.phonenumber}}</dd>
+						<dt>Address</dt>
+						<dd>{{selectedPerson.address}}</dd>
+						<dt>City</dt>
+						<dd>{{selectedPerson.city}}</dd>
+						<dt>Country</dt>
+						<dd>{{selectedPerson.country}}</dd>
+					</dl>
+				</div>
+			</div>
+		</div>
+	</div>
 </div >
 
 
