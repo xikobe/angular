@@ -1,0 +1,38 @@
+<!DOCTYPE html >
+<html lang="en" ng-app="codecraft" >
+<head >
+	<title >Lists Of Things</title >
+	<link href="libs/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet" >
+	<link href="css/scope.css" rel="stylesheet" >
+</head >
+
+<body >
+
+<div class="container">
+  <div class="row">
+    <div class="col-md-6">
+      <div class="parent" ng-controller="ParentController">
+        <label for="">
+          <input type="text" ng-model="name" name="name" value="">
+        </label>
+        <p>
+          {{name}}
+        </p>
+        <div class="child" ng-controller="ChildController">
+          <label for="">
+            <input type="text" ng-model="name" name="name" value="">
+          </label>
+          <p>
+            {{name}}
+          </p>
+          <button type="button" name="button" ng-click="reset()">Reset</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="libs/angular/angular.min.js" ></script >
+<script src="js/scope.js" ></script >
+</body >
+</html >
