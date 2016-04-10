@@ -1,6 +1,7 @@
 // This is the sample data for this lesson
 var app = angular.module('codecraft',[
   'ngResource',
+  'infinite-scroll',
 ]);
 
 app.config(function($httpProvider, $resourceProvider){
@@ -22,6 +23,9 @@ app.controller('PersonListController', function($scope, ContactService){
   $scope.order = "email";
   $scope.contacts = ContactService;
 
+  $scope.loadMore = function(){
+    ContactService.loadMore();
+  };
   $scope.sensitiveSearch = function(person){
     if($scope.search){
       return person.name.indexOf($scope.search) == 0 || person.email.indexOf($scope.search) == 0;
@@ -32,23 +36,43 @@ app.controller('PersonListController', function($scope, ContactService){
 
 
 app.service('ContactService', function(Contact){
-  
+
   var self = {
     'selectedPerson': null,
     'addPerson': function(person){
       this.persons.push(person);
     },
+
     'page': 1,
     'hasMore': true,
     'isLoading': false,
     'persons': [],
     'loadContacts': function(){
-      Contact.get(function(data){
-        console.log(data);
-        angular.forEach(data.results, function(person){
-          self.persons.push(new Contact(person));
-        })
-      })
+      if(self.hasMore && !self.isLoading){
+        self.isLoading = true;
+
+        var params = {
+          'page': self.page,
+        }
+
+        Contact.get(params, function(data){
+          console.log(data);
+          angular.forEach(data.results, function(person){
+            self.persons.push(new Contact(person));
+          })
+
+          if(!data.next){
+            self.hasMore = false;
+          }
+          self.isLoading = false;
+        });
+      }
+    },
+    'loadMore': function(){
+      if(self.hasMore && !self.isLoading){
+        self.page += 1;
+        self.loadContacts();
+      }
     }
   }
 
