@@ -26,12 +26,17 @@ app.controller('PersonListController', function($scope, ContactService){
   $scope.loadMore = function(){
     ContactService.loadMore();
   };
-  $scope.sensitiveSearch = function(person){
-    if($scope.search){
-      return person.name.indexOf($scope.search) == 0 || person.email.indexOf($scope.search) == 0;
+  $scope.$watch('search', function(oldVal, newVal){
+    if(angular.isDefined(newVal)){
+      $scope.contacts.doSearch(newVal);
     }
-    return true;
-  }
+  });
+
+  $scope.$watch('order', function(oldVal, newVal){
+    if(angular.isDefined(newVal)){
+      $scope.contacts.doOrder(newVal);
+    }
+  });
 })
 
 
@@ -39,10 +44,25 @@ app.service('ContactService', function(Contact){
 
   var self = {
     'selectedPerson': null,
+    'search': null,
+    'order': null,
     'addPerson': function(person){
       this.persons.push(person);
     },
-
+    'doSearch' : function(searchVal){
+      self.hasMore = true;
+      self.page = 1;
+      self.persons = [];
+      self.search = searchVal;
+      self.loadContacts();
+    },
+    'doOrder' : function(orderVal){
+      self.hasMore = true;
+      self.page = 1;
+      self.persons = [];
+      self.order = orderVal;
+      self.loadContacts();
+    },
     'page': 1,
     'hasMore': true,
     'isLoading': false,
@@ -53,6 +73,8 @@ app.service('ContactService', function(Contact){
 
         var params = {
           'page': self.page,
+          'search': self.search,
+          'ordering': self.order,
         }
 
         Contact.get(params, function(data){
