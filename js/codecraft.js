@@ -2,19 +2,34 @@
 var app = angular.module('codecraft',[
   'ngResource',
   'infinite-scroll',
+  'angularSpinner',
+  'jcs-autoValidate',
+  'angular-ladda'
 ]);
 
-app.config(function($httpProvider, $resourceProvider){
+app.config(function($httpProvider, $resourceProvider, laddaProvider){
   $httpProvider.defaults.headers.common['Authorization'] = 'Token c2c0185186918b795901f1aa163d94d3ba2f20d2';
   $resourceProvider.defaults.stripTrailingSlashes = false;
+  laddaProvider.setOption({ /* optional */
+      style: 'expand-left',
+      spinnerSize: 35,
+      spinnerColor: '#ffffff'
+    });
 });
 
 app.factory("Contact", function($resource){
-  return $resource("https://codecraftpro.com/api/samples/v1/contact/:id/")
-})
+  return $resource("https://codecraftpro.com/api/samples/v1/contact/:id/", {id:'@id'}, {
+    update: {
+      method: "PUT",
+    }
+  });
+});
 
 app.controller('PersonDetailController', function($scope, ContactService){
   $scope.contacts = ContactService
+  $scope.save= function(){
+    $scope.contacts.updateContact($scope.contacts.selectedPerson);
+  }
 });
 
 app.controller('PersonListController', function($scope, ContactService){
@@ -63,10 +78,18 @@ app.service('ContactService', function(Contact){
       self.order = orderVal;
       self.loadContacts();
     },
+    'updateContact': function(person){
+      console.log("service is updating");
+      self.isSaving = true;
+      person.$update().then(function(){
+        self.isSaving = false;
+      })
+    },
     'page': 1,
     'hasMore': true,
     'isLoading': false,
     'persons': [],
+    'isSaving': false,
     'loadContacts': function(){
       if(self.hasMore && !self.isLoading){
         self.isLoading = true;
