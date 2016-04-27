@@ -2,212 +2,120 @@
 <html lang="en" ng-app="codecraft" >
 <head >
 	<title >Contacts</title >
-	<link href="libs/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet" >
-	<link rel="stylesheet" href="bower_components/ladda/dist/ladda-themeless.min.css" media="screen" title="no title" charset="utf-8">
-	<link href="css/codecraft.css" rel="stylesheet" >
-</head >
+		<link href="libs/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet" >
+		<link rel="stylesheet" href="libs/ladda/dist/ladda-themeless.min.css" media="screen" title="no title" charset="utf-8">
+		<link href="css/codecraft.css" rel="stylesheet" >
+	</head >
 
-<body >
-<nav class="navbar navbar-inverse navbar-fixed-top" >
-	<div class="container" >
-		<div class="navbar-header" >
-			<a class="navbar-brand"
-			   href="/" >Contacts
-			</a >
+	<body >
+		<nav class="navbar navbar-inverse navbar-fixed-top" >
+			<div class="container" >
+				<div class="navbar-header" >
+					<a class="navbar-brand"
+					href="/" >Contacts
+				</a >
+			</div >
 		</div >
-	</div >
-</nav >
+	</nav >
 
-<div class="container main-content">
-	<div class="row">
-		<div class="col-md-8" ng-controller="PersonListController">
-			<div class="row">
-				<div class="col-md-12">
-					<form class="form-inline well well-sm">
-						<span class="glyphicon glyphicon-search"></span>
-						<div class="form-group">
-							<input placeholder="Search name..." type="text" class="form-control" id="name" ng-model="search">
-						</div>
-						<span class="glyphicon glyphicon-sort-by-attributes"></span>
-						<div class="form-group">
-							<select class="form-control" name=""
-											ng-model="order">
+	<div class="container main-content">
+		<div class="row">
+			<div class="col-md-8" ng-controller="PersonListController">
+				<div class="row">
+					<div class="col-md-12">
+						<form class="form-inline well well-sm">
+							<span class="glyphicon glyphicon-search"></span>
+							<div class="form-group">
+								<input placeholder="Search name..." type="text" class="form-control" id="name" ng-model="search">
+							</div>
+							<span class="glyphicon glyphicon-sort-by-attributes"></span>
+							<div class="form-group">
+								<select class="form-control" name=""
+								ng-model="order">
 									<option value="name"> Asc Name</option>
 									<option value="-name"> Desc email</option>
 									<option value="email"> Asc email</option>
 									<option value="-email"> Desc email</option>
-							</select>
-						</div>
-					</form>
+								</select>
+							</div>
+							<button class="btn btn-small pull-right btn-success"
+									ng-click="showCreateModal()">Create</button>
+							<div class="clearfix"></div>
+						</form>
+
 				</div>
 			</div>
 			<div class="row">
 				<div class="col-md-12">
 					<table class="table table-bordered" infinite-scroll="loadMore()" infinite-scroll-distance="1">
-					    <tr>
-					      <th></th>
-					      <th>Nome
-										<span ng-click="order = 'name'" class="glyphicon glyphicon-menu-up"></span>
-										<span ng-click="order = '-name'" class="glyphicon glyphicon-menu-down"></span>
-								</th>
-					      <th>Email
-									<span ng-click="order = 'email'" class="glyphicon glyphicon-menu-up"></span>
-									<span ng-click="order = '-email'" class="glyphicon glyphicon-menu-down"></span>
-								</th>
-					      <th>Birthday</th>
-					    </tr>
-					    <tr ng-repeat="person in contacts.persons"
-					        ng-click="contacts.selectedPerson = person"
-					        ng-style="{
-					          'background-color': person.email == contacts.selectedPerson.email ? 'lightgray' : '',
-					        }">
-					      <td>{{$index + 1}}</td>
-					      <td>{{person.name}}</td>
-					      <td>{{person.email}}</td>
-					      <td>{{person.birthdate | date:"longDate"}}</td>
-					    </tr>
-						<tr ng-show="contacts.persons.length == 0 && !contacts.isLoading">
-							<td colspan="4">
-								<div class="alert alert-info">
-									<p class="text-center">No results found for '{{search}}'</p>
-								</div>
-							</td>
+						<tr>
+							<th></th>
+							<th>Nome
+								<span ng-click="order = 'name'" class="glyphicon glyphicon-menu-up"></span>
+								<span ng-click="order = '-name'" class="glyphicon glyphicon-menu-down"></span>
+							</th>
+							<th>Email
+								<span ng-click="order = 'email'" class="glyphicon glyphicon-menu-up"></span>
+								<span ng-click="order = '-email'" class="glyphicon glyphicon-menu-down"></span>
+							</th>
+							<th>Birthday</th>
 						</tr>
-					  </table>
-					  <div ng-show="contacts.isLoading">
-					  	<span us-spinner></span>
-					  </div>
-					  
-				</div>
-			
+						<tr ng-repeat="person in contacts.persons"
+						ng-click="contacts.selectedPerson = person"
+						ng-style="{
+						'background-color': person.email == contacts.selectedPerson.email ? 'lightgray' : '',
+					}">
+					<td>{{$index + 1}}</td>
+					<td>{{person.name}}</td>
+					<td>{{person.email}}</td>
+					<td>{{person.birthdate | date:"longDate"}}</td>
+				</tr>
+				<tr ng-show="contacts.persons.length == 0 && !contacts.isLoading">
+					<td colspan="4">
+						<div class="alert alert-info">
+							<p class="text-center">No results found for '{{search}}'</p>
+						</div>
+					</td>
+				</tr>
+			</table>
+			<div ng-show="contacts.isLoading">
+				<span us-spinner></span>
 			</div>
-		</div>
-		<div class="col-md-4" ng-controller="PersonDetailController">
-			<div class="panel panel-default">
-				<div class="panel-heading">Details</div>
-				<div class="panel-body">
-					<!--<dl>
-						<dt>Name</dt>
-						<dd>{{contacts.selectedPerson.name}}</dd>
-						<dt>Email</dt>
-						<dd>{{contacts.selectedPerson.email}}</dd>
-						<dt>Brithday</dt>
-						<dd>{{contacts.selectedPerson.birthdate | date:"longDate"}}</dd>
-						<dt>Phonenumber</dt>
-						<dd>{{contacts.selectedPerson.phonenumber}}</dd>
-						<dt>Address</dt>
-						<dd>{{contacts.selectedPerson.address}}</dd>
-						<dt>City</dt>
-						<dd>{{contacts.selectedPerson.city}}</dd>
-						<dt>Country</dt>
-						<dd>{{contacts.selectedPerson.country}}</dd>
-					</dl>-->
-					<form class="form-horizontal" ng-submit="save()" novalidate>
-						<div class="form-group">
-							<label class="col-sm-2 control-label">Name</label>
-							<div class="col-sm-10">
-								<input type="text"
-									   class="form-control"
-									   name="name"
-									   ng-model="contacts.selectedPerson.name"
-									   required>
-							</div>
-						</div>
-						<div class="form-group">
-							<label class="col-sm-2 control-label">Email</label>
-							<div class="col-sm-10">
-								<input type="text"
-									   class="form-control"
-									   name="email"
-									   ng-model="contacts.selectedPerson.email"
-									   required>
-							</div>
-						</div>
-						<div class="form-group">
-							<label class="col-sm-2 control-label">Birthdate</label>
-							<div class="col-sm-10">
-								<input type="text"
-									   class="form-control"
-									   name="brithdate"
-									   ng-model="contacts.selectedPerson.birthdate"
-									   >
-							</div>
-						</div>
-						<div class="form-group">
-							<label class="col-sm-2 control-label">Sex</label>
-							<div class="col-sm-10">
-								<select name="sex"
-										class="form-control"
-										ng-model="contacts.selectedPerson.sex"
-										id="">
-									<option value="M">Male</option>
-									<option value="F">Female</option>
-								</select>
-							</div>
-						</div>
-						<div class="form-group">
-							<label class="col-sm-2 control-label">Phone Number</label>
-							<div class="col-sm-10">
-								<input type="text"
-									   class="form-control"
-									   name="phonenumber"
-									   ng-model="contacts.selectedPerson.phonenumber"
-									   >
-							</div>
-						</div>
-						<div class="form-group">
-							<label class="col-sm-2 control-label">Address</label>
-							<div class="col-sm-10">
-								<input type="text"
-									   class="form-control"
-									   name="address"
-									   ng-model="contacts.selectedPerson.address"
-									   >
-							</div>
-						</div>
-						<div class="form-group">
-							<label class="col-sm-2 control-label">City</label>
-							<div class="col-sm-10">
-								<input type="text"
-									   class="form-control"
-									   name="city"
-									   ng-model="contacts.selectedPerson.city"
-									   >
-							</div>
-						</div>
-						<div class="form-group">
-							<label class="col-sm-2 control-label">Country</label>
-							<div class="col-sm-10">
-								<input type="text"
-									   class="form-control"
-									   name="country"
-									   ng-model="contacts.selectedPerson.country"
-									   >
-							</div>
-						</div>
 
-						<div class="buttons">
-					        <button ladda="contacts.isSaving" class="btn btn-primary btn-block" type="submit">
-					        	<span ng-show="contacts.isSaving">Saving</span>
-					        	<span ng-hide="contacts.isSaving">Save</span>
-					        </button >
-					    </div >
-					</form>
-				</div>
+		</div>
+
+	</div>
+</div>
+<div class="col-md-4" ng-controller="PersonDetailController">
+	<div class="panel panel-default">
+		<div class="panel-heading">Details
+			<button class="btn btn-danger btn-sm pull-right"
+					ladda="contacts.isDeleting"
+					ng-click="remove()">Delete
+			</button>
+			<div class="clearfix"></div>
+		</div>
+			<div class="panel-body">
+				<form class="form-horizontal" ng-submit="save()" novalidate>
+					<ng-include src="'templates/form.html'"></ng-include>	
+				</form>
 			</div>
 		</div>
 	</div>
+</div>
 </div >
 
 
 <script src="libs/angular/angular.min.js" ></script>
-<script type="text/javascript" src="libs/angular-resource/angular-resource.min.js"></script>
-<script type="text/javascript" src="libs/ng-infinite-scroll.min.js"></script>
+<script src="libs/angular-resource/angular-resource.min.js"></script>
+<script src="libs/ng-infinite-scroll.min.js"></script>
 <script src="libs/spin.js/spin.js"></script>
 <script src="libs/angular-spinner/angular-spinner.js"></script>
-<script src="bower_components/angular-auto-validate/dist/jcs-auto-validate.min.js"></script>
-<script src="bower_components/ladda/dist/ladda.min.js"></script>
-<script src="bower_components/angular-ladda/dist/angular-ladda.min.js"></script>
+<script src="libs/angular-auto-validate/dist/jcs-auto-validate.min.js"></script>
+<script src="libs/ladda/dist/ladda.min.js"></script>
+<script src="libs/angular-ladda/dist/angular-ladda.min.js"></script>
+<script src="libs/angular-strap/dist/angular-strap.min.js"></script>
+<script src="libs/angular-strap/dist/angular-strap.tpl.min.js"></script>
 <script src="js/codecraft.js"></script>
 </body >
 </html >
