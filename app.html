@@ -4,6 +4,7 @@
 	<title >Contacts</title >
 		<link href="libs/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet" >
 		<link rel="stylesheet" href="libs/ladda/dist/ladda-themeless.min.css" media="screen" title="no title" charset="utf-8">
+		<link rel="stylesheet" href="libs/bootstrap-additions/dist/bootstrap-additions.min.css">
 		<link href="css/codecraft.css" rel="stylesheet" >
 	</head >
 
@@ -58,17 +59,17 @@
 								<span ng-click="order = 'email'" class="glyphicon glyphicon-menu-up"></span>
 								<span ng-click="order = '-email'" class="glyphicon glyphicon-menu-down"></span>
 							</th>
-							<th>Birthday</th>
+							<th>Phone Number</th>
 						</tr>
 						<tr ng-repeat="person in contacts.persons"
 						ng-click="contacts.selectedPerson = person"
 						ng-style="{
 						'background-color': person.email == contacts.selectedPerson.email ? 'lightgray' : '',
 					}">
-					<td>{{$index + 1}}</td>
+					<td><img ng-src="{{person.photo}}" class="img-circle profile-photo" /></td>
 					<td>{{person.name}}</td>
 					<td>{{person.email}}</td>
-					<td>{{person.birthdate | date:"longDate"}}</td>
+					<td>{{person.phonenumber}}</td>
 				</tr>
 				<tr ng-show="contacts.persons.length == 0 && !contacts.isLoading">
 					<td colspan="4">
