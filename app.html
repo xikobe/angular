@@ -76,7 +76,7 @@
 						ng-style="{
 						'background-color': person.email == contacts.selectedPerson.email ? 'lightgray' : '',
 					}">
-					<td><img ng-src="{{person.photo}}" class="img-circle profile-photo" /></td>
+					<td><img ng-src="{{person.photo | defaultImage:'http://placehold.it/30x30'}}" class="img-circle profile-photo" /></td>
 					<td>{{person.name}}</td>
 					<td>{{person.email}}</td>
 					<td>{{person.phonenumber}}</td>

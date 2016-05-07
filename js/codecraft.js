@@ -1,4 +1,4 @@
-// This is the sample data for this lesson
+ // This is the sample data for this lesson
 var app = angular.module('codecraft',[
   'ngResource',
   'infinite-scroll',
@@ -31,6 +31,22 @@ app.factory("Contact", function($resource){
     }
   });
 });
+
+
+/************* CUSTOM FILTER ************/
+app.filter('defaultImage', function(){
+  return function(input, param){
+    console.log("input: " + input);
+    console.log("param: " + param);
+    if(!input){
+      return param;
+    }else{
+      return input;
+    }
+
+    
+  }
+})
 
 app.controller('PersonDetailController', function($scope, ContactService){
   $scope.contacts = ContactService
