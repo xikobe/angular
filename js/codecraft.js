@@ -5,7 +5,9 @@ var app = angular.module('codecraft',[
   'angularSpinner',
   'jcs-autoValidate',
   'angular-ladda',
-  'mgcrea.ngStrap'
+  'mgcrea.ngStrap',
+  'toaster',
+  'ngAnimate'
 ]);
 
 app.config(function($httpProvider, $resourceProvider, laddaProvider, $datepickerProvider){
@@ -38,6 +40,7 @@ app.controller('PersonDetailController', function($scope, ContactService){
   $scope.remove = function(){
     $scope.contacts.removeContact($scope.contacts.selectedPerson);
   };
+  
 });
 
 app.controller('PersonListController', function($scope, ContactService, $modal){
@@ -78,7 +81,7 @@ app.controller('PersonListController', function($scope, ContactService, $modal){
 })
 
 
-app.service('ContactService', function(Contact, $q){
+app.service('ContactService', function(Contact, $q, toaster){
 
   var self = {
     'selectedPerson': null,
@@ -101,18 +104,11 @@ app.service('ContactService', function(Contact, $q){
       self.order = orderVal;
       self.loadContacts();
     },
-    'updateContact': function(person){
-      console.log("service is updating");
-      self.isSaving = true;
-      person.$update().then(function(){
-        self.isSaving = false;
-      })
-    },
     'page': 1,
     'hasMore': true,
     'isLoading': false,
     'persons': [],
-    'isSaving': false,
+    'isSaving': false, 
     'loadContacts': function(){
       if(self.hasMore && !self.isLoading){
         self.isLoading = true;
@@ -143,6 +139,14 @@ app.service('ContactService', function(Contact, $q){
       }
     },
     'isDeleting': false,
+    'updateContact': function(person){
+      console.log("service is updating");
+      self.isSaving = true;
+      person.$update().then(function(){
+        self.isSaving = false;
+        toaster.pop('success', 'Updated ' + person.name); 
+      })
+    },
     'removeContact': function(person){
       self.isDeleting = true;
       console.log("apaga");
@@ -163,6 +167,7 @@ app.service('ContactService', function(Contact, $q){
         self.page = 1;
         self.persons = [];
         self.loadContacts();
+        toaster.pop('success', 'Created ' + person.name); 
         d.resolve() // promessa completa
       });
       return d.promise;
