@@ -1,0 +1,14 @@
+<form class="navbar-form navbar-left">
+	<div class="form-group">
+		<input placeholder="Search name..." type="text" class="form-control" id="name" ng-model="contacts.search">
+	</div>
+	<div class="form-group">
+		<select class="form-control" name=""
+		ng-model="contacts.ordering">
+			<option value="name"> Asc Name</option>
+			<option value="-name"> Desc email</option>
+			<option value="email"> Asc email</option>
+			<option value="-email"> Desc email</option>
+		</select>
+	</div>
+</form>
