@@ -30,17 +30,15 @@
 					<td>{{person.email}}</td>
 					<td>{{person.phonenumber}}</td>
 				</tr>
-				<tr ng-show="contacts.persons.length == 0 && !contacts.isLoading">
-					<td colspan="4">
-						<div class="alert alert-info">
-							<p class="text-center">No results found for '{{search}}'</p>
-						</div>
-					</td>
-				</tr>
 			</table>
-			<div ng-show="contacts.isLoading">
-				<span us-spinner></span>
+			<div ng-show="contacts.persons.length == 0 && !contacts.isLoading">
+				<div class="alert alert-info">
+					<p class="text-center">No results found for '{{search}}'</p>
+				</div>
 			</div>
+			<cc-spinner></cc-spinner>
+			<div cc-spinner></div>
+			<div class="cc-spinner"></div>
 		</div>
 	</div>
 </div>

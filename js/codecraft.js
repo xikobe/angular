@@ -70,6 +70,14 @@ app.factory("Contact", function($resource){
 });
 
 
+app.directive("ccSpinner", function(){
+  return {
+    //'restrict': 'AEC', // para usar a directive como Atribute, Element, Class
+    'restrict': 'E',
+    'templateUrl': 'templates/spinner.html',
+  }
+})
+
 /************* CUSTOM FILTER ************/
 app.filter('defaultImage', function(){
   return function(input, param){
