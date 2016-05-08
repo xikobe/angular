@@ -1,0 +1,69 @@
+<div class="col-md-12" ng-controller="PersonListController">
+	<div class="row">
+		<div class="col-md-12">
+			<form class="form-inline well well-sm">
+				<span class="fa fa-search"></span>
+				<div class="form-group">
+					<input placeholder="Search name..." type="text" class="form-control" id="name" ng-model="search">
+				</div>
+				<span class="fa fa-sort"></span>
+				<div class="form-group">
+					<select class="form-control" name=""
+					ng-model="order">
+						<option value="name"> Asc Name</option>
+						<option value="-name"> Desc email</option>
+						<option value="email"> Asc email</option>
+						<option value="-email"> Desc email</option>
+					</select>
+				</div>
+				<button class="btn btn-small pull-right btn-success"
+						ng-click="showCreateModal()">Create</button>
+				<div class="clearfix"></div>
+			</form>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-md-12">
+			<table class="table table-bordered" infinite-scroll="loadMore()" infinite-scroll-distance="1">
+				<tr>
+					<th></th>
+					<th>
+						<div class="sortables">
+							<span ng-click="order = 'name'" class="fa fa-sort-asc"></span>
+							<span ng-click="order = '-name'" class="fa fa-sort-desc"></span>
+						</div>
+						Nome
+					</th>
+					<th>
+						<div class="sortables">
+							<span ng-click="order = 'email'" class="fa fa-sort-asc"></span>
+							<span ng-click="order = '-email'" class="fa fa-sort-desc"></span>
+						</div>
+						Email
+					</th>
+					<th>Phone Number</th>
+				</tr>
+				<tr ng-repeat="person in contacts.persons"
+				ng-click="contacts.selectedPerson = person"
+				ng-style="{
+				'background-color': person.email == contacts.selectedPerson.email ? 'lightgray' : '',
+			}">
+					<td><img ng-src="{{person.photo | defaultImage:'http://placehold.it/30x30'}}" class="img-circle profile-photo" /></td>
+					<td>{{person.name}}</td>
+					<td>{{person.email}}</td>
+					<td>{{person.phonenumber}}</td>
+				</tr>
+				<tr ng-show="contacts.persons.length == 0 && !contacts.isLoading">
+					<td colspan="4">
+						<div class="alert alert-info">
+							<p class="text-center">No results found for '{{search}}'</p>
+						</div>
+					</td>
+				</tr>
+			</table>
+			<div ng-show="contacts.isLoading">
+				<span us-spinner></span>
+			</div>
+		</div>
+	</div>
+</div>
