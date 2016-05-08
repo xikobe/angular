@@ -72,9 +72,13 @@ app.factory("Contact", function($resource){
 
 app.directive("ccSpinner", function(){
   return {
+    'transclude': true,
     //'restrict': 'AEC', // para usar a directive como Atribute, Element, Class
     'restrict': 'E',
     'templateUrl': 'templates/spinner.html',
+    'scope': {
+      'isLoading':'=',
+    }
   }
 })
 
