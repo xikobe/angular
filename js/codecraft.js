@@ -64,16 +64,20 @@ app.filter('defaultImage', function(){
   }
 })
 
-app.controller('PersonDetailController', function($scope, ContactService, $stateParams){
+app.controller('PersonDetailController', function($scope, ContactService, $stateParams, $state){
   console.log($stateParams);
 
   $scope.contacts = ContactService;
   $scope.contacts.selectedPerson = $scope.contacts.getPerson($stateParams.email);
   $scope.save= function(){
-    $scope.contacts.updateContact($scope.contacts.selectedPerson);
+    $scope.contacts.updateContact($scope.contacts.selectedPerson).then(function(){
+      $state.go("list");
+    });
   };
   $scope.remove = function(){
-    $scope.contacts.removeContact($scope.contacts.selectedPerson);
+    $scope.contacts.removeContact($scope.contacts.selectedPerson).then(function(){
+      $state.go("list");
+    });
   };
   
 });
@@ -182,21 +186,27 @@ app.service('ContactService', function(Contact, $q, toaster){
     'isDeleting': false,
     'updateContact': function(person){
       console.log("service is updating");
+      var d = $q.defer();
       self.isSaving = true;
       person.$update().then(function(){
         self.isSaving = false;
         toaster.pop('success', 'Updated ' + person.name); 
+        d.resolve();
       })
+      return d.promise;
     },
     'removeContact': function(person){
       self.isDeleting = true;
       console.log("apaga");
+      var d = $q.defer();
       person.$remove().then(function(){
         self.isDeleting = false;
         var index = self.persons.indexOf(person);
         self.persons.splice(index, 1);
         self.selectedPerson = null;
+        d.resolve();
       })
+      return d.promise;
     },
     'createContact' : function(person){
       var d = $q.defer(); // inicializa promise
