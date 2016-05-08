@@ -52,8 +52,8 @@ app.factory("Contact", function($resource){
 /************* CUSTOM FILTER ************/
 app.filter('defaultImage', function(){
   return function(input, param){
-    console.log("input: " + input);
-    console.log("param: " + param);
+    //console.log("input: " + input);
+    //console.log("param: " + param);
     if(!input){
       return param;
     }else{
@@ -65,7 +65,7 @@ app.filter('defaultImage', function(){
 })
 
 app.controller('PersonDetailController', function($scope, ContactService, $stateParams, $state){
-  console.log($stateParams);
+  //console.log($stateParams);
 
   $scope.contacts = ContactService;
   $scope.contacts.selectedPerson = $scope.contacts.getPerson($stateParams.email);
@@ -91,17 +91,6 @@ app.controller('PersonListController', function($scope, ContactService, $modal){
   $scope.loadMore = function(){
     ContactService.loadMore();
   };
-  $scope.$watch('search', function(oldVal, newVal){
-    if(angular.isDefined(newVal)){
-      $scope.contacts.doSearch(newVal);
-    }
-  });
-
-  $scope.$watch('order', function(oldVal, newVal){
-    if(angular.isDefined(newVal)){
-      $scope.contacts.doOrder(newVal);
-    }
-  });
   $scope.showCreateModal = function(){
     $scope.contacts.selectedPerson = {};
     $scope.createModal = $modal({
@@ -120,7 +109,7 @@ app.controller('PersonListController', function($scope, ContactService, $modal){
 })
 
 
-app.service('ContactService', function(Contact, $q, toaster){
+app.service('ContactService', function(Contact, $q, toaster, $rootScope){
 
   var self = {
     'selectedPerson': null,
@@ -135,18 +124,17 @@ app.service('ContactService', function(Contact, $q, toaster){
       }
 
     },
-    'doSearch' : function(searchVal){
+    'ordering' : 'name',
+    'doSearch' : function(){
       self.hasMore = true;
       self.page = 1;
       self.persons = [];
-      self.search = searchVal;
       self.loadContacts();
     },
-    'doOrder' : function(orderVal){
+    'doOrder' : function(){
       self.hasMore = true;
       self.page = 1;
       self.persons = [];
-      self.order = orderVal;
       self.loadContacts();
     },
     'page': 1,
@@ -222,10 +210,29 @@ app.service('ContactService', function(Contact, $q, toaster){
         d.resolve() // promessa completa
       });
       return d.promise;
+    },
+    'watchFilters': function(){
+      $rootScope.$watch(function(){
+        return self.search;
+      }, function(newVal){
+        if(angular.isDefined(newVal)){
+          self.doSearch();
+        }
+      });
+
+      $rootScope.$watch(function(){
+        return self.ordering;
+      }, function(newVal){
+        if(angular.isDefined(newVal)){
+          self.doOrder();
+        }
+      })
+
     }
   }
 
   self.loadContacts();
+  self.watchFilters();
 
   return self;
 })
