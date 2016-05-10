@@ -77,7 +77,30 @@ app.directive("ccSpinner", function(){
     'restrict': 'E',
     'templateUrl': 'templates/spinner.html',
     'scope': {
-      'isLoading':'=',
+      'isLoading':'=', // variable
+      'message': '@' // string
+    }
+  }
+})
+
+app.directive("ccCard", function(){
+  return {
+    //'restrict': 'AEC', // para usar a directive como Atribute, Element, Class
+    'restrict': 'AE',
+    'templateUrl': 'templates/card.html',
+    'scope': {
+      'user':'='
+    },
+    'controller':function($scope, ContactService){
+      $scope.isDeleting = false;
+      $scope.deleteUser = function(){
+        console.log("delete me");
+        $scope.isDeleting = true;
+        ContactService.removeContact($scope.user).then(function(){
+          //$state.go("list");
+          $scope.isDeleting = false;
+        });
+      }
     }
   }
 })
@@ -103,7 +126,7 @@ app.controller('PersonCreateController', function($scope, $state,ContactService)
   $scope.contacts.selectedPerson = {};
   $scope.save = function(){
     $scope.contacts.createContact($scope.contacts.selectedPerson).then(function(){
-      $state.go('list');
+      //$state.go('list');
     });
   }
 });
@@ -134,22 +157,6 @@ app.controller('PersonListController', function($scope, ContactService, $modal){
   $scope.loadMore = function(){
     ContactService.loadMore();
   };
-
-  $scope.showCreateModal = function(){
-    $scope.contacts.selectedPerson = {};
-    $scope.createModal = $modal({
-      scope: $scope,
-      template: 'templates/modal.create.tpl.html',
-      show: true,
-    })
-  }
-
-  $scope.createContact = function(){
-    console.log("createContact");
-    $scope.contacts.createContact($scope.contacts.selectedPerson).then(function(){
-      $scope.createModal.hide();
-    });
-  }
 })
 
 
@@ -229,13 +236,13 @@ app.service('ContactService', function(Contact, $q, toaster, $rootScope){
     },
     'removeContact': function(person){
       self.isDeleting = true;
-      console.log("apaga");
       var d = $q.defer();
       person.$remove().then(function(){
         self.isDeleting = false;
         var index = self.persons.indexOf(person);
         self.persons.splice(index, 1);
         self.selectedPerson = null;
+        toaster.pop('success', 'Removed ' + person.name); 
         d.resolve();
       })
       return d.promise;
