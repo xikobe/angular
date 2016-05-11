@@ -11,6 +11,10 @@ var app = angular.module('codecraft',[
   'ui.router'
 ]);
 
+app.config(['$compileProvider', function ($compileProvider) {
+  $compileProvider.debugInfoEnabled(false);
+}]);
+
 app.config(function ($stateProvider, $urlRouterProvider){
   $stateProvider
   .state('list', {
